@@ -1,13 +1,8 @@
-@Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install (Conda Edition)"
-Title %CEI_Title%
-
 :: ================================================================
 :: STEP 1: CONDA ENVIRONMENT CHECK & CREATION
 :: ================================================================
-echo %green%Checking for Conda environment: comfyui-easy...%reset%
+echo Checking for Conda environment: comfyui-easy...
 
-:: Check if Conda is reachable
 where conda >nul 2>nul
 if %errorlevel% neq 0 (
     echo [ERROR] Conda is not found in your PATH. 
@@ -20,9 +15,10 @@ if %errorlevel% neq 0 (
 conda info --envs | findstr /C:"comfyui-easy" >nul
 if %errorlevel% neq 0 (
     echo [INFO] Environment 'comfyui-easy' not found. Creating it now...
-    echo.
-    :: Create with Python 3.12 (Best for RTX 5090 compatibility)
     call conda create -n comfyui-easy python=3.12 -y
+    
+    :: DOUBLE CHECK: Did it actually get created?
+    conda info --envs | findstr /C:"comfyui-easy" >nul
     if %errorlevel% neq 0 (
         echo [ERROR] Failed to create environment.
         pause
@@ -32,7 +28,6 @@ if %errorlevel% neq 0 (
     echo [INFO] Environment 'comfyui-easy' already exists. Using it.
 )
 
-:: Activate the environment
 call conda activate comfyui-easy
 if %errorlevel% neq 0 (
     echo [ERROR] Could not activate 'comfyui-easy'.
